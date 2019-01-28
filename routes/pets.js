@@ -19,10 +19,10 @@ petsRouter.get('/pets/new', (req, res) => {
 // CREATE PET 
 petsRouter.post('/pets', upload.single('avatarUrl'), (req, res, next) => { // make sure all the places have the same name...
   
-  var pet = new Pet(req.body);
+  let pet = new Pet(req.body);
   pet.save(function (err) {
     if (req.file) {
-      
+
       client.upload(req.file.path, {}, function (err, versions, meta) {
         if (err) {
           return res.status(400).send({
@@ -41,11 +41,13 @@ petsRouter.post('/pets', upload.single('avatarUrl'), (req, res, next) => { // ma
         res.send({pet})
 
       });
+
     } else {
       res.send({pet})
     }
   })
-})
+
+});
 
 // EDIT PET
 petsRouter.get('/pets/:id/edit', (req, res) => {
