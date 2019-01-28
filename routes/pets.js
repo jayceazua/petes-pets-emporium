@@ -30,7 +30,6 @@ const client = new Upload(process.env.S3_BUCKET, {
     suffix: '-square'
   }]
 });
-
 // PET ROUTES
 
   // INDEX PET => index.js
@@ -40,10 +39,10 @@ petsRouter.get('/pets/new', (req, res) => {
   res.render('pets-new');
 });
 
-// CREATE PET
-petsRouter.post('/pets', upload.single('avatar'), (req, res, next) => {
+// CREATE PET 
+petsRouter.post('/pets', upload.single('avatarUrl'), (req, res, next) => { // make sure all the places have the same name...
+  
   var pet = new Pet(req.body);
-  console.log(req.body)
   pet.save(function (err) {
     if (req.file) {
       client.upload(req.file.path, {}, function (err, versions, meta) {
@@ -61,17 +60,13 @@ petsRouter.post('/pets', upload.single('avatar'), (req, res, next) => {
           pet.save();
         });
 
-        res.send({
-          pet: pet
-        });
+        res.send({pet})
       });
     } else {
-      res.send({
-        pet: pet
-      });
+      res.send({pet})
     }
-  });
-});
+  })
+})
 
 // EDIT PET
 petsRouter.get('/pets/:id/edit', (req, res) => {
