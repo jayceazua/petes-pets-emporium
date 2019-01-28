@@ -4,30 +4,28 @@ block content
     
     .row.justify-content-center
         .col-sm-6
-            legend New Pet
-            form(action="/pets/0?_method=PUT", method="POST")
+            legend Edit Pet
+            form(action=`/pets/${pet.id}?_method=PUT`, method="POST")
                 .form-group
-                    label Name
-                    input.form-control(name="name" value=pet.name)
+                    label Name*
+                    input.form-control(name="name" value=pet.name required)
                 .form-group
-                    label Species
-                    input.form-control(name="species" value=pet.species)    
+                    label Species*
+                    input.form-control(name="species" value=pet.species required) 
                 .form-group
-                    label Rectangular Image URL
-                    input.form-control(name="picUrl" value=pet.picUrl) 
+                    label Birthday*
+                    input.form-control(name="birthday" value=pet.birthday required)      
                 .form-group
-                    label Square Image URL
-                    input.form-control(name="picUrlSq" value=pet.picUrlSq)
+                    label Avatar*
+                    input.form-control(name="avatarUrl" type="file" value=pet.avatarUrl required)
                 .form-group
-                    label Birthday
-                    input.form-control(name="birthday" value=pet.birthday)    
+                    label Favorite Food*
+                    input.form-control(name="favoriteFood" value=pet.favoriteFood required)    
                 .form-group
-                    label Favorite Food
-                    input.form-control(name="favoriteFood" value=pet.favoriteFood)    
-                .form-group
-                    label Description
+                    label Description*
                     textarea.form-control(name="description")= pet.description
                 button(type="submit").btn.btn-primary Save
+            //- DELETE
             .text-right
-                form(action="/pets/0?_method=DELETE", method="POST")
+                form(action=`/pets/${pet.id}?_method=DELETE`, method="POST")
                     button(type="submit").btn.btn-danger Remove

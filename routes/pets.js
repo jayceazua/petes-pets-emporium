@@ -43,6 +43,7 @@ petsRouter.get('/pets/new', (req, res) => {
 // CREATE PET
 petsRouter.post('/pets', upload.single('avatar'), (req, res, next) => {
   var pet = new Pet(req.body);
+  console.log(req.body)
   pet.save(function (err) {
     if (req.file) {
       client.upload(req.file.path, {}, function (err, versions, meta) {
@@ -69,8 +70,8 @@ petsRouter.post('/pets', upload.single('avatar'), (req, res, next) => {
         pet: pet
       });
     }
-  })
-})
+  });
+});
 
 // EDIT PET
 petsRouter.get('/pets/:id/edit', (req, res) => {
