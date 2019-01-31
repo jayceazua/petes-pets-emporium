@@ -4,7 +4,7 @@ const Pet = require('../models/pet');
 // UPLOADING TO AWS S3
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
-
+// S3 Config 
 const { client } = require('../middleware/s3_client');
 
 // PET ROUTES
@@ -17,23 +17,20 @@ petsRouter.get('/pets/new', (req, res) => {
 });
 
 // CREATE PET 
-petsRouter.post('/pets', upload.single('avatarUrl'), (req, res, next) => { // make sure all the places have the same name...
+petsRouter.post('/pets', upload.single('avatarUrl'), (req, res, next) => {
   
   let pet = new Pet(req.body);
-  pet.save(function (err) {
+  pet.save((err) => {
     if (req.file) {
 
-      client.upload(req.file.path, {}, function (err, versions, meta) {
-        if (err) {
-          return res.status(400).send({
-            err: err
-          })
-        };
+      client.upload(req.file.path, {/* options */}, (err, versions, meta) => {
 
-        versions.forEach(function (image) {
-          var urlArray = image.url.split('-');
+        if (err) {return res.status(400).send({err})};
+
+        versions.forEach((image) => {
+          let urlArray = image.url.split('-');
           urlArray.pop();
-          var url = urlArray.join('-');
+          let url = urlArray.join('-');
           pet.avatarUrl = url;
           pet.save();
         });
@@ -46,6 +43,8 @@ petsRouter.post('/pets', upload.single('avatarUrl'), (req, res, next) => { // ma
       res.send({pet})
     }
   })
+  // .then()
+  // .catch((err) => res.status(400).send({err}))
 
 });
 
