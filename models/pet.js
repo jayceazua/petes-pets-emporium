@@ -15,7 +15,8 @@ const PetSchema = new Schema({
   picUrlSq: { type: String },
   avatarUrl: { type: String, required: [true, 'Avatar photo failed to load or need there needs to be a photo']},
   favoriteFood: { type: String, required: [true, 'What about a favorite food?'] },
-  description: { type: String, min: [100, 'Pets find homes faster with a good description.'] }
+  description: { type: String, min: [100, 'Pets find homes faster with a good description.'] },
+  price: { type: Number, required: true }
 }, {
   timestamps: true
 });
