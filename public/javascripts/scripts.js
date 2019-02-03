@@ -1,3 +1,4 @@
+// CREATE 
 if (document.querySelector('#new-pet')) {
   document.querySelector('#new-pet').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -28,18 +29,28 @@ if (document.querySelector('#new-pet')) {
       });
   });
 }
+
+
+// UPDATE
 if (document.querySelector('#update-pet')) {
   document.querySelector('#update-pet').addEventListener('submit', (e) => {
+    
     e.preventDefault();
     var form = document.getElementById('update-pet');
     var pet = new FormData(form);
-    axios.put(`/pets/`, pet, {
+
+    axios.put(`/pets/${pet._id}`, pet, {
       headers: {
         'Content-Type': 'multipart/form-data;'
       }
-    }).then((response) => {
-      window.location.replace(`/pets/${response.data.pet._id}`)
-    }).catch((err) => {
+    })
+    .then((response) => {
+      // The way to reroute: res.redirect()
+      window.location.replace(`/pets/${response.data.pet._id}`);
+
+    })
+    .catch((err) => {
+
       const alert = document.getElementById('alert');
       alert.classList.add('alert-warning');
       alert.textContent = `Error message: ${err}`;
@@ -49,6 +60,8 @@ if (document.querySelector('#update-pet')) {
         alert.style.display = 'none';
         alert.classList.remove('alert-warning');
       }, 3000)
+
     })
+
   })
 }

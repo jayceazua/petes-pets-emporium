@@ -5,7 +5,7 @@ block content
     .row.justify-content-center
         .col-sm-6
             legend Edit Pet
-            form(action=`#`, method="POST" id="update-pet")
+            form(action=`/pets/${pet.id}?_method=PUT`  method="POST" /* id="update-pet" */)
                 .form-group
                     label Name*
                     input.form-control(name="name" value=pet.name)
@@ -27,5 +27,5 @@ block content
                 button(type="submit").btn.btn-primary Save
             //- DELETE
             .text-right
-                form(action=`/pets/${pet.id}?_method=DELETE`, method="POST")
+                form(action=`/pets/${pet.id}?_method=DELETE` method="POST")
                     button(type="submit").btn.btn-danger Remove

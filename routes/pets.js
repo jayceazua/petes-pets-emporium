@@ -64,29 +64,25 @@ petsRouter.route('/pets/:id')
     .catch((err) => { res.send(err) });
   })
   // UPDATE PET
-  .put(upload.single('avatarUrl'), (req, res) => {
+  .put(upload.single('avatarUrl'), (req, res, next) => {
     Pet.findByIdAndUpdate(req.params.id, req.body)
       .then((pet) => {
-            if (req.file) {
-
-              client.upload(req.file.path, {/* options */ }, (err, versions, meta) => {
-                if (err) {return res.status(400).send({err})};
-
-                versions.forEach((image) => {
-                  let urlArray = image.url.split('-');
-                  urlArray.pop();
-                  let url = urlArray.join('-');
-                  pet.avatarUrl = url;
-                  pet.save();
-                });
-
-                res.send({pet})
-
-              });
-
-            } else {
-              res.send({pet})
-            }
+        return res.redirect(`/pets/${req.params.id}`);
+            // if (req.file) {
+            //   client.upload(req.file.path, {/* options */ }, (err, versions, meta) => {
+            //     if (err) {return res.status(400).send({err})};
+            //     versions.forEach((image) => {
+            //       let urlArray = image.url.split('-');
+            //       urlArray.pop();
+            //       let url = urlArray.join('-');
+            //       pet.avatarUrl = url;
+            //       pet.save();
+            //     });
+            //     res.send({pet})
+            //   });
+            // } else {
+            //   res.send({pet})
+            // }
       })
       .catch((err) => {res.send(err)});
   })
