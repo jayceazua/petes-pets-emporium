@@ -5,22 +5,22 @@ block content
     .row.justify-content-center
         .col-sm-6
             legend Edit Pet
-            form(action=`/pets/${pet.id}?_method=PUT`, method="POST")
+            form(action=`#`, method="POST" id="update-pet")
                 .form-group
                     label Name*
-                    input.form-control(name="name" value=pet.name required)
+                    input.form-control(name="name" value=pet.name)
                 .form-group
                     label Species*
-                    input.form-control(name="species" value=pet.species required) 
+                    input.form-control(name="species" value=pet.species) 
                 .form-group
                     label Birthday*
-                    input.form-control(name="birthday" value=pet.birthday required)      
+                    input.form-control(name="birthday" value=pet.birthday)      
                 .form-group
                     label Avatar*
-                    input.form-control(name="avatarUrl" type="file" value=pet.avatarUrl required)
+                    input.form-control(name="avatarUrl" type="file" value=pet.avatarUrl)
                 .form-group
                     label Favorite Food*
-                    input.form-control(name="favoriteFood" value=pet.favoriteFood required)    
+                    input.form-control(name="favoriteFood" value=pet.favoriteFood)    
                 .form-group
                     label Description*
                     textarea.form-control(name="description")= pet.description

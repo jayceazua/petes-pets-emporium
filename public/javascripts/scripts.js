@@ -12,17 +12,12 @@ if (document.querySelector('#new-pet')) {
         }
       })
       .then(function (response) {
-
-        console.log(`This is the response: ${response.data}`);
-
         window.location.replace(`/pets/${response.data.pet._id}`);
       })
-      
       .catch(function (error) {
-
         const alert = document.getElementById('alert')
         alert.classList.add('alert-warning');
-        alert.textContent = 'Oops, something went wrong saving your pet. Please check your information and try again.';
+        alert.textContent = `Error message: ${error}`
         alert.style.display = 'block';
 
         setTimeout(() => {
@@ -32,4 +27,28 @@ if (document.querySelector('#new-pet')) {
 
       });
   });
+}
+if (document.querySelector('#update-pet')) {
+  document.querySelector('#update-pet').addEventListener('submit', (e) => {
+    e.preventDefault();
+    var form = document.getElementById('update-pet');
+    var pet = new FormData(form);
+    axios.put(`/pets/`, pet, {
+      headers: {
+        'Content-Type': 'multipart/form-data;'
+      }
+    }).then((response) => {
+      window.location.replace(`/pets/${response.data.pet._id}`)
+    }).catch((err) => {
+      const alert = document.getElementById('alert');
+      alert.classList.add('alert-warning');
+      alert.textContent = `Error message: ${err}`;
+      alert.style.display = 'block';
+
+      setTimeout(() => {
+        alert.style.display = 'none';
+        alert.classList.remove('alert-warning');
+      }, 3000)
+    })
+  })
 }
