@@ -8,8 +8,9 @@ const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
-const methodOverride = require('method-override')
-
+const methodOverride = require('method-override');
+const nodemailer = require('nodemailer');
+const mg = require('nodemailer-mailgun-transport');
 const app = express();
 
 const mongoose = require('mongoose');
@@ -62,5 +63,15 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// MAILGUN
+const auth = {
+  auth: {
+    api_key: 'key-keyaldkjfadfasdfadsfadsf',
+    domain: 'domain.com'
+  }
+}
+
+const nodemailerMailgun = nodemailer.createTransport(mg(auth));
 
 module.exports = app;
