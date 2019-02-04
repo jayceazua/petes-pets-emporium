@@ -13,8 +13,20 @@ const nodemailer = require('nodemailer');
 const mg = require('nodemailer-mailgun-transport');
 const app = express();
 
+// DATABASE
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/petes-pets');
+mongoose.Promise = global.Promise;
+const dbURI = process.env.MONGODB_URI || `mongodb://localhost:27017/pets-emporium`;
+mongoose.connect(dbURI, {
+  useNewUrlParser: true
+});
+mongoose.connection.once('open', () => {
+  console.log('Database is up!')
+});
+mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection Error:'));
+mongoose.set('useCreateIndex', true);
+mongoose.set('useFindAndModify', false);
+// mongoose.set('debug', true);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
