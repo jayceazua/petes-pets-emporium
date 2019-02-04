@@ -67,11 +67,33 @@ app.use((err, req, res, next) => {
 // MAILGUN
 const auth = {
   auth: {
-    api_key: 'key-keyaldkjfadfasdfadsfadsf',
-    domain: 'domain.com'
+    api_key: process.env.MAILGUN_API_KEY,
+    domain: process.env.EMAIL_DOMAIN
   }
 }
 
 const nodemailerMailgun = nodemailer.createTransport(mg(auth));
+
+// SEND EMAIL
+const user = {
+  email: 'azua@wiflo.io',
+  name: 'Jayce',
+  age: '26'
+};
+
+nodemailerMailgun.sendMail({
+  from: 'no-reply@wiflo.io',
+  to: user.email, // An array if you have multiple recipients.
+  subject: 'Hey you, awesome!',
+  template: {
+    name: 'email.pug',
+    engine: 'pug',
+    context: user
+  }
+}).then(info => {
+  console.log('Response: ' + info);
+}).catch(err => {
+  console.log('Error: ' + err);
+});
 
 module.exports = app;
