@@ -17,7 +17,7 @@ petsRouter.get('/pets/new', (req, res) => {
 });
 
 // CREATE PET 
-petsRouter.post('/pets', upload.single('avatarUrl'), (req, res, next) => {
+petsRouter.post('/api/pets', upload.single('avatarUrl'), (req, res, next) => {
   
   let pet = new Pet(req.body);
   pet.save((err) => {
@@ -25,7 +25,7 @@ petsRouter.post('/pets', upload.single('avatarUrl'), (req, res, next) => {
 
       client.upload(req.file.path, {/* options */}, (err, versions, meta) => {
 
-        if (err) {return res.status(400).send({err})};
+        if (err) {return res.json({err})};
 
         versions.forEach((image) => {
           let urlArray = image.url.split('-');
@@ -35,12 +35,12 @@ petsRouter.post('/pets', upload.single('avatarUrl'), (req, res, next) => {
           pet.save();
         });
 
-        res.send({pet})
+        res.json({pet})
 
       });
 
     } else {
-      res.send({pet})
+      res.json({pet})
     }
   })
 });
@@ -50,16 +50,18 @@ petsRouter.get('/pets/:id/edit', (req, res) => {
   Pet.findById(req.params.id)
   .then((pet) => {
     res.render('pets-edit', { pet });
+    // res.json({pet});
   })
-  .catch((err) => res.send(err));
+  .catch((err) => res.json(err));
 });
 
-petsRouter.route('/pets/:id')
+petsRouter.route('/api/pets/:id')
   // SHOW PET
   .get((req, res) => {
     Pet.findById(req.params.id)
     .then((pet) => {
       res.render('pets-show', { pet });
+      // res.json({pet})
     })
     .catch((err) => { res.send(err) });
   })
@@ -95,30 +97,49 @@ petsRouter.route('/pets/:id')
     .catch((err) => res.send(err));
   });
 
-// SEARCH PET
-petsRouter.get('/search', (req, res) => {
+// SEARCH
+app.get('/search', async (req, res) => {
   const page = req.query.page || 1;
+  Pet.find({$text: {$search: req.query.term}}, {score: { $meta: "textScore"}}).sort({score: {$meta: 'textScore'}}).limit(20)
+    .exec(function (err, pets) {
+      if (err) {return res.json(err)}
+
+      if (req.header('Content-Type') == 'application/json') {
+        return res.json({
+          pets: pets
+        });
+      } else {
+        return res.render('pets-index', {
+          pets: pets,
+          term: req.query.term,
+          currentPage: page
+        });
+      }
+    });
+/*
   const term = new RegExp(req.query.term, 'i');
 
-  Pet.paginate({ 
-    $or: [
-      {'name': term},
-      {'species': term}
-    ]
-  })
-  .then((results) => {
-    res.render('pets-index', { 
-      pets: results.docs,
-      pagesCount: results.pages,
-      currentPage: page,
-      term: req.query.term
-    });
-  })
-  .catch((err) => { res.json(err) });
+  Pet.paginate({
+      $or: [
+        {'name': term},
+        {'species': term}
+      ]
+    })
+    .then((results) => {
+      res.render('pets-index', {
+        pets: results.docs,
+        pagesCount: results.pages,
+        currentPage: page,
+        term: req.query.term
+      });
+    })
+
+*/ 
+
 });
 
 // PURCHASE
-app.post('/pets/:id/purchase', (req, res) => {
+petsRouter.post('/pets/:id/purchase', (req, res) => {
   console.log(req.body);
   // Set your secret key: remember to change this to your live secret key in production
   // See your keys here: https://dashboard.stripe.com/account/apikeys
